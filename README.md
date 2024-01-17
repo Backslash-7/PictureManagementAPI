@@ -42,9 +42,13 @@ npm run start:dev //For Dev Mode
 
 1. Create a Folder
 
-POST Request: http://localhost:3000/folders/
-Request Format:
+
 ```bash
+
+POST Request: http://localhost:3000/folders/
+
+Request Format:
+
 {
   "folderName": "RootFolderName";
 }
@@ -52,13 +56,18 @@ Request Format:
 
 2. Upload Image in a Folder
 
+```bash
 POST Request: http://localhost:3000/folders/:folderId/upload
+```
+
 
 3. Create Sub-folders
 
-POST Request: http://localhost:3000/folders/:parentFolderId/subfolders
-Request Format:
 ```bash
+
+POST Request: http://localhost:3000/folders/:parentFolderId/subfolders
+
+Request Format:
 {
     "subfolderName" : "SubFolderName"
 }
@@ -66,4 +75,6 @@ Request Format:
 
 4. List all Folder Content
 
+```bash
 GET Request: http://localhost:3000/folders/:folderId/contents
+```
