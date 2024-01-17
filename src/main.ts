@@ -6,14 +6,9 @@ import * as path from 'path';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const rootDirectory = path.join(__dirname, 'uploads');
-  if (!fs.existsSync(rootDirectory)) {
-    fs.mkdirSync(rootDirectory);
-  }
+  await app.listen(3000, () => {
+    console.log("Server started");
+  });
 
-
-  await app.listen(3000);
 }
-
-
 bootstrap();

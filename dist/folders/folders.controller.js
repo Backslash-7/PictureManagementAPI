@@ -20,25 +20,55 @@ let FoldersController = class FoldersController {
     constructor(foldersService) {
         this.foldersService = foldersService;
     }
-    createFolder(body) {
-        return this.foldersService.createFolder(body.folderName);
+    createFolder(body, req, res) {
+        try {
+            const folderName = this.foldersService.createFolder(body.folderName);
+            res.status(200).json({ message: 'Folder Created Sucessfully!!!', folderName });
+        }
+        catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Error while Creating the Folder!!!' });
+        }
     }
-    uploadFile(file, folderId) {
-        return this.foldersService.uploadFile(folderId, file);
+    uploadFile(file, folderId, req, res) {
+        try {
+            this.foldersService.uploadFile(folderId, file);
+            res.status(200).json({ message: 'Image Uploaded successfully!!!' });
+        }
+        catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Error while uploading the Image!!!' });
+        }
     }
-    createSubfolder(body, parentFolderId) {
-        return this.foldersService.createSubfolder(parentFolderId, body.subfolderName);
+    createSubfolder(body, parentFolderId, req, res) {
+        try {
+            const subFolderName = this.foldersService.createSubfolder(parentFolderId, body.subfolderName);
+            res.status(200).json({ message: 'Folder Created Sucessfully!!!', subFolderName });
+        }
+        catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Error while Creating the Folder!!!' });
+        }
     }
-    getFolderContents(folderId) {
-        return this.foldersService.getFolderContents(folderId);
+    getFolderContents(folderId, req, res) {
+        try {
+            const contents = this.foldersService.getFolderContents(folderId);
+            res.status(200).json({ message: 'Content Fetched Sucessfully!!!', contents });
+        }
+        catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Error Occured while fetching Content!!!' });
+        }
     }
 };
 exports.FoldersController = FoldersController;
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Object, Object]),
     __metadata("design:returntype", void 0)
 ], FoldersController.prototype, "createFolder", null);
 __decorate([
@@ -46,23 +76,29 @@ __decorate([
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
     __param(0, (0, common_1.UploadedFile)()),
     __param(1, (0, common_1.Param)('folderId')),
+    __param(2, (0, common_1.Req)()),
+    __param(3, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [Object, String, Object, Object]),
     __metadata("design:returntype", void 0)
 ], FoldersController.prototype, "uploadFile", null);
 __decorate([
     (0, common_1.Post)(':parentFolderId/subfolders'),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Param)('parentFolderId')),
+    __param(2, (0, common_1.Req)()),
+    __param(3, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [Object, String, Object, Object]),
     __metadata("design:returntype", void 0)
 ], FoldersController.prototype, "createSubfolder", null);
 __decorate([
     (0, common_1.Get)(':folderId/contents'),
     __param(0, (0, common_1.Param)('folderId')),
+    __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", void 0)
 ], FoldersController.prototype, "getFolderContents", null);
 exports.FoldersController = FoldersController = __decorate([

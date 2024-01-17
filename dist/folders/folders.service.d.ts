@@ -10,4 +10,5 @@ export declare class FoldersService {
     createSubfolder(parentFolderId: string, subfolderName: string): string;
     private findFolderPath;
     getFolderContents(folderId: string): string[];
+    private readFolderRecursive;
 }
