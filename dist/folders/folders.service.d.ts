@@ -8,5 +8,6 @@ export declare class FoldersService {
     createFolder(folderName: string): string;
     uploadFile(folderId: string, file: MulterFile): void;
     createSubfolder(parentFolderId: string, subfolderName: string): string;
+    private findFolderPath;
     getFolderContents(folderId: string): string[];
 }

@@ -22,21 +22,47 @@ let FoldersService = class FoldersService {
         return folderId;
     }
     uploadFile(folderId, file) {
-        const allowedExtensions = ['.png', '.jpeg'];
+        const allowedExtensions = ['.png', '.jpeg', '.jpg'];
         const fileExtension = path.extname(file.originalname).toLowerCase();
         if (allowedExtensions.includes(fileExtension)) {
-            const filePath = path.join(this.rootDirectory, folderId, file.originalname);
+            const parentFolderPath = this.findFolderPath(folderId);
+            if (!parentFolderPath) {
+                throw new Error(`Parent folder with ID ${folderId} does not exist.`);
+            }
+            const filePath = path.join(parentFolderPath, file.originalname);
             fs.writeFileSync(filePath, file.buffer);
         }
         else {
-            throw new Error('Invalid file format. Only PNG and JPEG files are allowed.');
+            throw new Error('Invalid file format. Only PNG, JPG and JPEG files are allowed.');
         }
     }
     createSubfolder(parentFolderId, subfolderName) {
         const subfolderId = (0, uuid_1.v4)();
-        const subfolderPath = path.join(this.rootDirectory, parentFolderId, subfolderId);
-        fs.mkdirSync(subfolderPath);
+        const parentFolderPath = this.findFolderPath(parentFolderId);
+        if (!parentFolderPath) {
+            throw new Error(`Parent folder with ID ${parentFolderId} does not exist.`);
+        }
+        const subfolderPath = path.join(parentFolderPath, subfolderId);
+        fs.mkdirSync(subfolderPath, { recursive: true });
         return subfolderId;
+    }
+    findFolderPath(folderId) {
+        const stack = [this.rootDirectory];
+        while (stack.length > 0) {
+            const currentPath = stack.pop();
+            const folderPath = path.join(currentPath, folderId);
+            if (fs.existsSync(folderPath)) {
+                return folderPath;
+            }
+            const subfolders = fs.readdirSync(currentPath);
+            for (const subfolder of subfolders) {
+                const subfolderPath = path.join(currentPath, subfolder);
+                if (fs.statSync(subfolderPath).isDirectory()) {
+                    stack.push(subfolderPath);
+                }
+            }
+        }
+        return undefined;
     }
     getFolderContents(folderId) {
         const folderPath = path.join(this.rootDirectory, folderId);

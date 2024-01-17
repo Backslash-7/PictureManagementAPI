@@ -27,3 +27,4 @@ export class FoldersController {
     return this.foldersService.getFolderContents(folderId);
   }
 }
+
