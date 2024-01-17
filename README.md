@@ -36,3 +36,34 @@ Follow these steps to install and start the server:
 npm run start:dev //For Dev Mode
 
 ```
+
+
+## APIs
+
+1. Create a Folder
+
+POST Request: http://localhost:3000/folders/
+Request Format:
+```bash
+{
+  "folderName": "RootFolderName";
+}
+```
+
+2. Upload Image in a Folder
+
+POST Request: http://localhost:3000/folders/:folderId/upload
+
+3. Create Sub-folders
+
+POST Request: http://localhost:3000/folders/:parentFolderId/subfolders
+Request Format:
+```bash
+{
+    "subfolderName" : "SubFolderName"
+}
+```
+
+4. List all Folder Content
+
+GET Request: http://localhost:3000/folders/:folderId/contents
