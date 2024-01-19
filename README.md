@@ -18,15 +18,18 @@ Follow these steps to install and start the server:
    ```
 2. Navigate to the project directory:
 
-```bash
-     cd PictureManagementAPI
-```
+    ```bash
+    cd PictureManagementAPI
+    ```
   
 3. Install dependencies:
-```bash
+    ```bash
     npm install
-```
-
+    ```
+4. Install Nest Js
+    ```bash
+    npm i -g @nestjs/cli
+    ```
 
 
 ## Running Application 
@@ -53,6 +56,8 @@ Request Format:
   "folderName": "RootFolderName";
 }
 ```
+
+
 
 2. Upload Image in a Folder
 
