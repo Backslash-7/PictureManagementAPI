@@ -4,6 +4,16 @@
 
 Pictures Management Tool is a backend application built using Nest.js, a TypeScript framework for building scalable and maintainable server-side applications. This tool allows users to organize and store photographs by creating folders and subfolders.
 
+## Prerequisite
+
+1. Install dependencies:
+    ```bash
+    npm install
+    ```
+2. Install Nest Js
+    ```bash
+    npm i -g @nestjs/cli
+    ```
 
 ## Installation
 
@@ -21,15 +31,7 @@ Follow these steps to install and start the server:
     ```bash
     cd PictureManagementAPI
     ```
-  
-3. Install dependencies:
-    ```bash
-    npm install
-    ```
-4. Install Nest Js
-    ```bash
-    npm i -g @nestjs/cli
-    ```
+
 
 
 ## Running Application 
