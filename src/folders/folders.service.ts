@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -13,12 +12,43 @@ export class FoldersService {
   private rootDirectory = path.join(__dirname, '..', '..', 'uploads'); 
 
   createFolder(folderName: string): string {
-    const folderId = uuidv4();
-    const folderPath = path.join(this.rootDirectory, folderId);
-
+    if (folderName.trim() === "") {
+      throw new Error(`Empty or whitespace-only Folder Name not allowed`);
+    }
+    const RootFolderName = folderName.replace(/[^a-zA-Z0-9]/g, '_'); 
+    const folderPath = path.join(this.rootDirectory, RootFolderName);
+  
+    if (this.folderExists(this.rootDirectory, RootFolderName)) {
+      throw new Error(` '${RootFolderName}' already exists!!!`);
+    }
+  
     fs.mkdirSync(folderPath, { recursive: true });
-    return folderId;
+    return ` '${RootFolderName}' successfully created!!!`;
   }
+  
+  private folderExists(currentPath: string, targetFolderName: string): boolean {
+    try {
+      const entries = fs.readdirSync(currentPath);
+  
+      for (const entry of entries) {
+        const entryPath = path.join(currentPath, entry);
+        const isDirectory = fs.statSync(entryPath).isDirectory();
+  
+        if (entry === targetFolderName) {
+          return true;
+        }
+  
+        if (isDirectory && this.folderExists(entryPath, targetFolderName)) {
+          return true;
+        }
+      }
+  
+      return false;
+    } catch (error) {
+      throw new Error(`Error in Folder: ${error.message}`);
+    }
+  }
+  
 
   uploadFile(folderId: string, file: MulterFile): void {
     const allowedExtensions = ['.png', '.jpeg', '.jpg'];
@@ -28,34 +58,44 @@ export class FoldersService {
       const parentFolderPath = this.findFolderPath(folderId);
   
       if (!parentFolderPath) {
-        throw new Error(`Parent folder with ID ${folderId} does not exist.`);
+        throw{
+          message:`Image can not be uploaded.  ${folderId} does not exist!!!`
+        };
       }
   
       const filePath = path.join(parentFolderPath, file.originalname);
       fs.writeFileSync(filePath, file.buffer);
     } else {
-      throw new Error('Invalid file format. Only PNG, JPG and JPEG files are allowed.');
+      throw new Error('Invalid file format. Only PNG, JPG and JPEG files are allowed!!!');
     }
   }
   
 
   createSubfolder(parentFolderId: string, subfolderName: string): string {
     try {
-      const subfolderId = uuidv4();
-      const parentFolderPath = this.findFolderPath(parentFolderId);
-
-      if (!parentFolderPath) {
-        throw new Error(`Parent folder with ID ${parentFolderId} does not exist.`);
+      if (subfolderName.trim() === "") {
+        throw new Error(`Empty or whitespace-only Sub-Folder Name not allowed`);
       }
-
-      const subfolderPath = path.join(parentFolderPath, subfolderId);
-
+      const SubfolderN = subfolderName.replace(/[^a-zA-Z0-9]/g, '_'); 
+      const parentFolderPath = this.findFolderPath(parentFolderId);
+  
+      if (!parentFolderPath) {
+        throw new Error(`Parent folder ${parentFolderId} does not exist!!!`);
+      }
+  
+      const subfolderPath = path.join(parentFolderPath, SubfolderN);
+  
+      if (fs.existsSync(subfolderPath)) {
+        throw new Error(`Subfolder with name '${SubfolderN}' already exists in the parent folder!!!`);
+      }
+  
       fs.mkdirSync(subfolderPath, { recursive: true });
-      return subfolderId;
+      return `Subfolder '${SubfolderN}' successfully created in the parent folder '${parentFolderId}'!!!`;
     } catch (error) {
       throw new Error(`Error creating subfolder: ${error.message}`);
     }
   }
+  
 
   private findFolderPath(folderId: string): string | undefined {
     try {
@@ -81,7 +121,7 @@ export class FoldersService {
 
       return undefined;
     } catch (error) {
-      throw new Error(`Error finding folder path: ${error.message}`);
+      throw new Error(`Error:  ${error.message}`);
     }
   }
   
@@ -93,13 +133,17 @@ export class FoldersService {
       throw new Error(`Root folder not found: ${rootFolderPath}`);
     }
 
-    return this.readFolderRecursive(rootFolderPath, folderId);
+    return this.readFolder(rootFolderPath, folderId);
   }
 
-  private readFolderRecursive(folderPath: string, targetFolderId: string): string[] {
+  private readFolder(folderPath: string, targetFolderId: string): string[] {
     const contents: string[] = [];
 
     try {
+       if(!this.findFolderPath(targetFolderId))
+       {
+         throw new Error(`Folder does not exist`);
+       }
       const entries = fs.readdirSync(folderPath);
 
       for (const entry of entries) {
@@ -111,37 +155,15 @@ export class FoldersService {
         }
 
         if (isDirectory) {
-          contents.push(...this.readFolderRecursive(entryPath, targetFolderId));
+          contents.push(...this.readFolder(entryPath, targetFolderId));
         }
       }
     } catch (error) {
-      throw new Error(`Error reading folder contents: ${error.message}`);
+      throw new Error(`Error reading folder contents`);
     }
 
     return contents;
   }
 
   
-  // getFolderContents(folderId: string): string[] {
-  //   const folderPath = path.join(this.rootDirectory, folderId);
-  //   return this.readFolderRecursive(folderPath);
-  // }
-
-  // private readFolderRecursive(folderPath: string): string[] {
-  //   const contents: string[] = [];
-  //   const entries = fs.readdirSync(folderPath);
-
-  //   for (const entry of entries) {
-  //     const entryPath = path.join(folderPath, entry);
-  //     const isDirectory = fs.statSync(entryPath).isDirectory();
-
-  //     contents.push(entry);
-
-  //     if (isDirectory) {
-  //       contents.push(...this.readFolderRecursive(entryPath));
-  //     }
-  //   }
-
-  //   return contents;
-  // }
 }

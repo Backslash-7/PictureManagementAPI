@@ -15,7 +15,13 @@ export class FoldersController {
     }catch(error)
     {
       console.error(error);
-      res.status(500).json({error : 'Error while Creating the Folder!!!'});
+      res.status(500).json
+      ({
+        data: {},
+        message: 'Error while Creating the Folder!!!',
+        success: false,
+        err: error.message
+      });
     }
   }
 
@@ -27,7 +33,13 @@ export class FoldersController {
       res.status(200).json({ message: 'Image Uploaded successfully!!!'});
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Error while uploading the Image!!!' });
+      res.status(500).json
+      ({ 
+        data: {},
+        message: 'Error while uploading the Image!!!',
+        success: false,
+        err: error.message
+      });
     }
   }
 
@@ -38,7 +50,13 @@ export class FoldersController {
       res.status(200).json({message: 'Folder Created Sucessfully!!!', subFolderName});
     }catch(error){
       console.error(error);
-      res.status(500).json({error: 'Error while Creating the Folder!!!'});
+      res.status(500).json
+      ({
+        data: {},
+        message: 'Error while Creating the Folder!!!',
+        success: false,
+        err: error.message
+      });
     }
   }
 
@@ -50,7 +68,13 @@ export class FoldersController {
     }catch(error)
     {
       console.error(error);
-      res.status(500).json({ error: 'Error Occured while fetching Content!!!'});
+      res.status(500).json
+      ({ 
+        data: {},
+        message: 'Error Occured while fetching Content!!!',
+        success: false,
+        err:error.message
+      });
     }
   }
 }

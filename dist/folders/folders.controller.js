@@ -27,7 +27,12 @@ let FoldersController = class FoldersController {
         }
         catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Error while Creating the Folder!!!' });
+            res.status(500).json({
+                data: {},
+                message: 'Error while Creating the Folder!!!',
+                success: false,
+                err: error.message
+            });
         }
     }
     uploadFile(file, folderId, req, res) {
@@ -37,7 +42,12 @@ let FoldersController = class FoldersController {
         }
         catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Error while uploading the Image!!!' });
+            res.status(500).json({
+                data: {},
+                message: 'Error while uploading the Image!!!',
+                success: false,
+                err: error.message
+            });
         }
     }
     createSubfolder(body, parentFolderId, req, res) {
@@ -47,7 +57,12 @@ let FoldersController = class FoldersController {
         }
         catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Error while Creating the Folder!!!' });
+            res.status(500).json({
+                data: {},
+                message: 'Error while Creating the Folder!!!',
+                success: false,
+                err: error.message
+            });
         }
     }
     getFolderContents(folderId, req, res) {
@@ -57,7 +72,12 @@ let FoldersController = class FoldersController {
         }
         catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Error Occured while fetching Content!!!' });
+            res.status(500).json({
+                data: {},
+                message: 'Error Occured while fetching Content!!!',
+                success: false,
+                err: error.message
+            });
         }
     }
 };
