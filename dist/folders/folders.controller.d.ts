@@ -1,14 +1,15 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { FoldersService, MulterFile } from './folders.service';
 export declare class FoldersController {
     private readonly foldersService;
     constructor(foldersService: FoldersService);
     createFolder(body: {
         folderName: string;
-    }, req: Request, res: Response): void;
-    uploadFile(file: MulterFile, folderId: string, req: Request, res: Response): void;
+    }, res: Response): Promise<void>;
+    uploadFile(file: MulterFile, folderId: string, res: Response): Promise<void>;
     createSubfolder(body: {
+        parentFolderId: string;
         subfolderName: string;
-    }, parentFolderId: string, req: Request, res: Response): void;
-    getFolderContents(folderId: string, req: Request, res: Response): void;
+    }, res: Response): Promise<void>;
+    getFolderContents(folderId: string, res: Response): Promise<void>;
 }

@@ -16,110 +16,99 @@ exports.FoldersController = void 0;
 const common_1 = require("@nestjs/common");
 const platform_express_1 = require("@nestjs/platform-express");
 const folders_service_1 = require("./folders.service");
+const swagger_1 = require("@nestjs/swagger");
 let FoldersController = class FoldersController {
     constructor(foldersService) {
         this.foldersService = foldersService;
     }
-    createFolder(body, req, res) {
+    async createFolder(body, res) {
         try {
-            const folderName = this.foldersService.createFolder(body.folderName);
-            res.status(200).json({ message: 'Folder Created Sucessfully!!!', folderName });
+            const folderName = await this.foldersService.createFolder(body.folderName);
+            res.status(200).json({ message: 'Folder Created Successfully', folderName });
         }
         catch (error) {
             console.error(error);
-            res.status(500).json({
-                data: {},
-                message: 'Error while Creating the Folder!!!',
-                success: false,
-                err: error.message
-            });
+            res.status(500).json({ message: 'Error while Creating the Folder', error: error.message });
         }
     }
-    uploadFile(file, folderId, req, res) {
+    async uploadFile(file, folderId, res) {
         try {
-            this.foldersService.uploadFile(folderId, file);
-            res.status(200).json({ message: 'Image Uploaded successfully!!!' });
+            await this.foldersService.uploadFile(folderId, file);
+            res.status(200).json({ message: 'Image Uploaded Successfully' });
         }
         catch (error) {
             console.error(error);
-            res.status(500).json({
-                data: {},
-                message: 'Error while uploading the Image!!!',
-                success: false,
-                err: error.message
-            });
+            res.status(500).json({ message: 'Error while uploading the Image', error: error.message });
         }
     }
-    createSubfolder(body, parentFolderId, req, res) {
+    async createSubfolder(body, res) {
         try {
-            const subFolderName = this.foldersService.createSubfolder(parentFolderId, body.subfolderName);
-            res.status(200).json({ message: 'Folder Created Sucessfully!!!', subFolderName });
+            const { parentFolderId, subfolderName } = body;
+            const subFolderName = await this.foldersService.createSubfolder(parentFolderId, subfolderName);
+            res.status(200).json({ message: 'Subfolder Created Successfully', subFolderName });
         }
         catch (error) {
             console.error(error);
-            res.status(500).json({
-                data: {},
-                message: 'Error while Creating the Folder!!!',
-                success: false,
-                err: error.message
-            });
+            res.status(500).json({ message: 'Error while Creating the Folder', error: error.message });
         }
     }
-    getFolderContents(folderId, req, res) {
+    async getFolderContents(folderId, res) {
         try {
-            const contents = this.foldersService.getFolderContents(folderId);
-            res.status(200).json({ message: 'Content Fetched Sucessfully!!!', contents });
+            const contents = await this.foldersService.getFolderContents(folderId);
+            res.status(200).json({ message: 'Content Fetched Successfully', contents });
         }
         catch (error) {
             console.error(error);
-            res.status(500).json({
-                data: {},
-                message: 'Error Occured while fetching Content!!!',
-                success: false,
-                err: error.message
-            });
+            res.status(500).json({ message: 'Error Occurred while fetching Content', error: error.message });
         }
     }
 };
 exports.FoldersController = FoldersController;
 __decorate([
     (0, common_1.Post)(),
+    (0, swagger_1.ApiBody)({ description: 'Root Folder Name', schema: { type: 'object', properties: { folderName: { type: 'string' } } } }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Folder Created Successfully' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'Error while creating the folder' }),
     __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Req)()),
-    __param(2, (0, common_1.Res)()),
+    __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
 ], FoldersController.prototype, "createFolder", null);
 __decorate([
     (0, common_1.Post)(':folderId/upload'),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({ schema: { type: 'object', properties: { file: { type: 'string', format: 'binary' } }, required: ['file'] } }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Image Uploaded Successfully' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'Error while uploading the Image' }),
     __param(0, (0, common_1.UploadedFile)()),
     __param(1, (0, common_1.Param)('folderId')),
-    __param(2, (0, common_1.Req)()),
-    __param(3, (0, common_1.Res)()),
+    __param(2, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, Object, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Object, String, Object]),
+    __metadata("design:returntype", Promise)
 ], FoldersController.prototype, "uploadFile", null);
 __decorate([
     (0, common_1.Post)(':parentFolderId/subfolders'),
+    (0, swagger_1.ApiBody)({ description: 'Sub Folder Details', schema: { type: 'object', properties: { parentFolderId: { type: 'string' }, subfolderName: { type: 'string' } } } }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Sub-Folder Created Successfully' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'Error while creating the Sub-folder' }),
     __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Param)('parentFolderId')),
-    __param(2, (0, common_1.Req)()),
-    __param(3, (0, common_1.Res)()),
+    __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, Object, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
 ], FoldersController.prototype, "createSubfolder", null);
 __decorate([
     (0, common_1.Get)(':folderId/contents'),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Folder Content Fetched Successfully' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'Error while fetching the Folder Content' }),
     __param(0, (0, common_1.Param)('folderId')),
-    __param(1, (0, common_1.Req)()),
-    __param(2, (0, common_1.Res)()),
+    __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
 ], FoldersController.prototype, "getFolderContents", null);
 exports.FoldersController = FoldersController = __decorate([
     (0, common_1.Controller)('folders'),

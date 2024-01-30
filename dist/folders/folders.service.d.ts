@@ -5,10 +5,10 @@ export interface MulterFile {
 }
 export declare class FoldersService {
     private rootDirectory;
-    createFolder(folderName: string): string;
+    createFolder(folderName: string): Promise<string>;
     private folderExists;
-    uploadFile(folderId: string, file: MulterFile): void;
-    createSubfolder(parentFolderId: string, subfolderName: string): string;
+    uploadFile(folderId: string, file: MulterFile): Promise<void>;
+    createSubfolder(parentFolderId: string, subfolderName: string): Promise<string>;
     private findFolderPath;
     getFolderContents(folderId: string): string[];
     private readFolder;
