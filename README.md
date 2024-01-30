@@ -50,7 +50,8 @@ npm run start:dev //For Dev Mode
 
 ```bash
 
-POST Request: http://localhost:3000/folders/
+POST Request
+http://localhost:3000/folders/
 
 Request Format:
 
@@ -64,7 +65,8 @@ Request Format:
 2. Upload Image in a Folder
 
 ```bash
-POST Request: http://localhost:3000/folders/:folderId/upload
+POST Request
+http://localhost:3000/folders/:folderId/upload
 ```
 
 
@@ -72,7 +74,8 @@ POST Request: http://localhost:3000/folders/:folderId/upload
 
 ```bash
 
-POST Request: http://localhost:3000/folders/:parentFolderId/subfolders
+POST Request
+http://localhost:3000/folders/:parentFolderId/subfolders
 
 Request Format:
 {
@@ -83,5 +86,12 @@ Request Format:
 4. List all Folder Content
 
 ```bash
-GET Request: http://localhost:3000/folders/:folderId/contents
+GET Request
+http://localhost:3000/folders/:folderId/contents
+```
+
+5. Swagger
+
+```bash
+http://localhost:3000/api/
 ```
